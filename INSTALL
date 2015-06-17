@@ -2,13 +2,16 @@
 
 echo "Installing FindDuplicateFiles V.0.0.1, a tool for finding duplicated files"
 
-echo "creating"
-mkdir -p usr/bin/fdf
-cp FindDuplicatesFiles.py usr/bin/fdf
-sudo chmod +x usr/bin/fdf/FindDuplicatesFiles.py
+echo "Creating environment for FindDuplicateFiles"
+sudo mkdir -p /usr/bin/fdf
+sudo cp FindDuplicatesFiles.py /usr/bin/fdf
+sudo chmod +x /usr/bin/fdf/FindDuplicatesFiles.py
 
 chmod +x /usr/bin/fdf/FindDuplicatesFiles.py
 
+echo "Installing command"
 echo "alias fdf=\"python /usr/bin/fdf/FindDuplicatesFiles.py\"" >> ~/.bash_profile
 
 source ~/.bash_profile
+echo "Installation complete"
+echo "Restart Terminal.app and enter fdf"
