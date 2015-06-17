@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+echo "Installing FindDuplicateFiles V.0.0.1, a tool for finding duplicated files"
+
+echo "creating"
+mkdir -p usr/bin/fdf
+cp FindDuplicatesFiles.py usr/bin/fdf
+sudo chmod +x usr/bin/fdf/FindDuplicatesFiles.py
+
+chmod +x /usr/bin/fdf/FindDuplicatesFiles.py
+
+echo "alias fdf=\"python /usr/bin/fdf/FindDuplicatesFiles.py\"" >> ~/.bash_profile
+
+source ~/.bash_profile
