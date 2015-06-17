@@ -18,14 +18,12 @@
 #################################################################################
 
 import sys
+import os
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, join, basename
 
 sname = ""
 duplicates = 0
-
-
-
 
 def main(path):
     ##
@@ -40,7 +38,8 @@ def filesFromDir(path):
     return [f for f in listdir(path) if isfile(join(path, f))]
 
 def compareName(fname):
-    return fname == sname
+    baseName = os.path.splitext(fname)[0]
+    return baseName == sname
 
 def walkFiles(list):
     for f in list:
@@ -49,7 +48,14 @@ def walkFiles(list):
             duplicates =  duplicates + 1
 
 def printEndInfo(path):
-    print('Number of duplicates found in {}: {}'.format(path, duplicates))
+    global duplicates
+    if duplicates == 1:
+        print('Single file found in {}'.format(path))
+    elif duplicates == 0:
+        global sname
+        print('No file with the name {} has been found'.format(sname))
+    else:
+        print('Number of duplicates found in {}: {}'.format(path, duplicates))
 
 def printHelp():
     print('fdf dir file_name_extension')

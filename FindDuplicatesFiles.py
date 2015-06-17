@@ -18,14 +18,12 @@
 #################################################################################
 
 import sys
+import os
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, join, basename
 
 sname = ""
 duplicates = 0
-
-
-
 
 def main(path):
     ##
@@ -40,7 +38,8 @@ def filesFromDir(path):
     return [f for f in listdir(path) if isfile(join(path, f))]
 
 def compareName(fname):
-    return os.path.splitext(fname)[0] == sname
+    baseName = os.path.splitext(fname)[0]
+    return baseName == sname
 
 def walkFiles(list):
     for f in list:
