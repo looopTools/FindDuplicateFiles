@@ -20,47 +20,78 @@
 import sys
 import os
 from os import listdir
-from os.path import isfile, join, basename
+from os.path import isfile, join, basename, isdir
 
-sname = ""
-duplicates = 0
+#sname = ""
+#duplicates = 0
 
-def main(path):
-    ##
+## Main method
+def main(path, sname, duplicates, rec):
+    duplicates = commonMain(path, sname, duplicates)
+    if rec:
+        main_rec(path, sname, duplicates, rec)
+
+    printEndInfo(path, sname, duplicates)
+
+def commonMain(path, sname, duplicates):
+    print('Searching in dir: {}'.format(path))
     print('Loading files')
     files = filesFromDir(path)
     print('Files loaded')
     print('Checking for dublicates')
-    walkFiles(files)
-    printEndInfo(path)
+    return walkFiles(files, sname,  duplicates)
 
+
+def main_rec(path, sname, duplicates, rec):
+    dirs = dirsFromDir(path)
+    walkDirs(dirs, path, sname, duplicates, rec)
+
+
+# Generates a list of fiels from a directory
 def filesFromDir(path):
     return [f for f in listdir(path) if isfile(join(path, f))]
 
-def compareName(fname):
+# Generates a list of sub directories from a directory
+def dirsFromDir(path):
+    return [d for d in listdir(path) if isdir(join(path, d))]
+
+
+# Checks the name of a file with out file extension
+def compareName(fname, sname):
     baseName = os.path.splitext(fname)[0]
     return baseName == sname
 
-def walkFiles(list):
+def walkFiles(list, sname, duplicates):
     for f in list:
-        if compareName(f):
-            global duplicates
+        if compareName(f, sname):
             duplicates =  duplicates + 1
+    return duplicates
 
-def printEndInfo(path):
-    global duplicates
+def walkDirs(list, path, sname, duplicates, rec):
+    for d in list:
+        newPath = join(path, d)
+        main(newPath, sname, duplicates, rec)
+
+
+
+
+def printEndInfo(path, sname, duplicates):
     if duplicates == 1:
         print('Single file found in {}'.format(path))
     elif duplicates == 0:
-        global sname
         print('No file with the name {} has been found'.format(sname))
     else:
         print('Number of duplicates found in {}: {}'.format(path, duplicates))
 
 def printHelp():
-    print('fdf dir file_name_extension')
+    print('fdf dir file_name_out_extension')
+    print('fdf -r dir file_name_out_extension - for recursive traversal')
     print('fdf -h: prints help')
 
+
+
+
+## Scripting for running the program
 
 if sys.argv[1] == '-h':
     printHelp()
@@ -68,7 +99,7 @@ else:
     if len(sys.argv) < 3:
         print('Enter all arguments')
     else:
-        global snam
-        sname = sys.argv[2]
-        print(sname)
-        main(sys.argv[1])
+        if '-r' in sys.argv:
+            main(sys.argv[2], sys.argv[3], 0, True)
+        else:
+            main(sys.argv[1], sys.argv[2], 0, False)
